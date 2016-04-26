@@ -1,4 +1,4 @@
-# evergreen-mongo
+# trbl-evergreen-mongo
 
 Evergreen Mongo Branch Source Directive.
 
@@ -29,6 +29,10 @@ Would get replaced with the first record matching that query:
 ```
 
 To use the module, simply register it with Evergreen.
+
+```
+npm i --save trbl-evergreen-mongo
+```
 
 ```
 require('trbl-evergreen')
