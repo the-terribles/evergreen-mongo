@@ -1,0 +1,40 @@
+{
+  "name": "trbl-evergreen-mongo",
+  "version": "0.0.1",
+  "description": "MongoDB branch source directive",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha test --recursive",
+    "coverage": "./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- test --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/the-terribles/evergreen-mongo.git"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "keywords": [
+    "config"
+  ],
+  "author": "Richard Clayton <rlc.blacksun@gmail.com> (https://rclayton.silvrback.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/the-terribles/evergreen-mongo/issues"
+  },
+  "homepage": "https://github.com/the-terribles/evergreen-mongo#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.4.5",
+    "sinon": "^1.17.3",
+    "trbl-evergreen": "0.0.1"
+  },
+  "dependencies": {
+    "mongodb": "^2.1.17",
+    "safe-eval": "^0.2.0"
+  }
+}
