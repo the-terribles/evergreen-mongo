@@ -32,7 +32,7 @@ describe('Mongo Branch Source Directive', function() {
   it('should return an error if it cannot connect to Mongo', function(next){
 
     var context = new DirectiveContext('mongo', util.format('config/{_id:"%s"}', docId), [{ field: 'foo' }]),
-        mongoDirective = new MongoDirective({ uri: "mongodb://localhost:27018/test" });
+        mongoDirective = new MongoDirective({ uri: 'mongodb://localhost:27018/test' });
 
     mongoDirective.handle(context, {}, {}, TestUtils.wrapAsync(next, function(err){
       expect(err).to.be.an.instanceOf(MongoError);
@@ -52,7 +52,7 @@ describe('Mongo Branch Source Directive', function() {
   it('should return an error if the specified collection does not exist', function(next){
 
     var context = new DirectiveContext('mongo', util.format('notfound/{_id:"%s"}', docId), [{ field: 'foo' }]),
-        mongoDirective = new MongoDirective({ uri: "mongodb://localhost:27017/test" });
+        mongoDirective = new MongoDirective({ uri: 'mongodb://localhost:27017/test' });
 
     mongoDirective.handle(context, {}, {}, TestUtils.wrapAsync(next, function(err){
       expect(err).to.be.an.instanceOf(errors.MongoDocumentNotFoundError);
@@ -61,7 +61,7 @@ describe('Mongo Branch Source Directive', function() {
 
   it('should return an error if no item is returned for the specified query', function(next){
     var context = new DirectiveContext('mongo', 'config/{notfound:"notfound"}', [{ field: 'foo' }]),
-        mongoDirective = new MongoDirective({ uri: "mongodb://localhost:27017/test" });
+        mongoDirective = new MongoDirective({ uri: 'mongodb://localhost:27017/test' });
 
     mongoDirective.handle(context, {}, {}, TestUtils.wrapAsync(next, function(err){
       expect(err).to.be.an.instanceOf(errors.MongoDocumentNotFoundError);
@@ -70,7 +70,7 @@ describe('Mongo Branch Source Directive', function() {
 
   it('should return an error if the expression is invalid', function(next){
     var context = new DirectiveContext('mongo', 'asdasdasdfsadf', [{ field: 'foo' }]),
-        mongoDirective = new MongoDirective({ uri: "mongodb://localhost:27017/test" });
+        mongoDirective = new MongoDirective({ uri: 'mongodb://localhost:27017/test' });
 
     mongoDirective.handle(context, {}, {}, TestUtils.wrapAsync(next, function(err){
       expect(err).to.be.an.instanceOf(errors.EvergreenMongoExpressionError);
@@ -79,7 +79,7 @@ describe('Mongo Branch Source Directive', function() {
 
   it('should return an error if the query is invalid', function(next){
     var context = new DirectiveContext('mongo', 'config/akjsdhkjasdhdfa', [{ field: 'foo' }]),
-        mongoDirective = new MongoDirective({ uri: "mongodb://localhost:27017/test" });
+        mongoDirective = new MongoDirective({ uri: 'mongodb://localhost:27017/test' });
 
     mongoDirective.handle(context, {}, {}, TestUtils.wrapAsync(next, function(err){
       expect(err).to.be.an.instanceOf(errors.EvergreenMongoExpressionError);
@@ -94,7 +94,7 @@ describe('Mongo Branch Source Directive', function() {
   it('should return the document for the specified query', function(next){
 
     var context = new DirectiveContext('mongo', util.format('config/{_id:"%s"}', docId), [{ field: 'foo' }]),
-        mongoDirective = new MongoDirective({ uri: "mongodb://localhost:27017/test" });
+        mongoDirective = new MongoDirective({ uri: 'mongodb://localhost:27017/test' });
 
     mongoDirective.handle(context, {}, {}, TestUtils.wrapAsync(next, function(err, _context){
       expect(err).to.be.null;
@@ -103,5 +103,31 @@ describe('Mongo Branch Source Directive', function() {
         foo: 'bar'
       });
     }));
+  });
+
+  describe('Integration test', function(){
+
+    it('should allow the module to be registered with Evergreen', function(next){
+
+      process.env.EV_MONGO_URI = 'mongodb://localhost:27017/test';
+
+      var evergreenMongo = require('../index');
+
+      require('trbl-evergreen')
+        .addModule(evergreenMongo)
+        .render({ stuff: util.format('$mongo:config/{_id:"%s"}', docId) })
+        .and()
+        .then(TestUtils.wrapAsync(next, function(config){
+            expect(config).to.deep.eq({
+              stuff: {
+                _id: docId,
+                foo: 'bar'
+              }
+            });
+          }),
+          TestUtils.wrapAsync(next, function(err){
+            expect.fail();
+          }));
+    });
   });
 });

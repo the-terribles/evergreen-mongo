@@ -2,6 +2,8 @@
 
 Evergreen Mongo Branch Source Directive.
 
+![Build Status](https://circleci.com/gh/the-terribles/evergreen-mongo.svg?style=shield&circle-token=:circle-token)
+
 ### What does that even mean?
 
 Simply, that the content of a branch (e.g. `foo.bar` in `{ foo: { bar: '...' }}` will be replaced with content from MongoDB).  For example:
