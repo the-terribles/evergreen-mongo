@@ -3,7 +3,3 @@ machine:
     - docker
   node:
     version: 4.0.0
-
-test:
-  pre:
-    - docker run -d -p 27017:27017 mongo; sleep 10
