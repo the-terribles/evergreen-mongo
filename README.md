@@ -11,7 +11,7 @@ Simply, that the content of a branch (e.g. `foo.bar` in `{ foo: { bar: '...' }}`
 ```javascript
 {
   foo: {
-    bar: '$mongo:collection/{_id:"507f191e810c19729de860ea"}'
+    bar: '$mongo:collection/{environment:"{{env.NODE_ENV}}",key:"bar"}'
   }
 }
 ```
@@ -23,6 +23,8 @@ Would get replaced with the first record matching that query:
   foo: {
     bar: {
       _id: '507f191e810c19729de860ea',
+      environment: 'blue',
+      key: 'bar',
       host: 'localhost',
       port: 23423
     }
