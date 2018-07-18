@@ -3,10 +3,12 @@
 var chai = require('chai'),
     expect = chai.expect,
     util = require('util'),
+    sinon = require('sinon'),
     errors = require('../lib/errors'),
     DirectiveContext = require('trbl-evergreen/lib/directive-context.js'),
     TestUtils = require('trbl-evergreen/test/utils.js'),
-    MongoClient = require('mongodb').MongoClient,
+    mongodb = require('mongo-mock'),
+    MongoClient = mongodb.MongoClient,
     MongoError = require('mongodb').MongoError,
     MongoDirective = require('../lib/directive');
 
@@ -26,6 +28,15 @@ describe('Mongo Branch Source Directive', function() {
           next();
         });
       });
+    });
+  });
+
+  before(function(){
+    sinon.replace(MongoDirective, 'open', function(uri, callback){
+      if (uri === 'mongodb://localhost:27018/test') {
+        return callback(new MongoError('failed to connect to server [localhost:27018]'));
+      }
+      return MongoClient.connect(uri, callback);
     });
   });
 
